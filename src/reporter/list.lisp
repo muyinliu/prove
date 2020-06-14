@@ -83,8 +83,7 @@
         
           (when duration
             (format stream " ")
-            (print-duration stream duration (slot-value report 'slow-threshold))))
-        (terpri stream)))))
+            (print-duration stream duration (slot-value report 'slow-threshold))))))))
 
 (defmethod format-report (stream (reporter list-reporter) (report skipped-test-report) &rest args)
   (declare (ignore args))
