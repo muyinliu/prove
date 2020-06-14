@@ -11,6 +11,9 @@
 (in-package :prove.color)
 
 (defvar *enable-colors*
+  #+lispworks
+  nil
+  #-lispworks
   (not (equal (uiop:getenv "EMACS") "t"))
   "Flag whether colorize a test report. The default is T except on Emacs (SLIME).")
 

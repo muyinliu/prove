@@ -74,13 +74,16 @@
   (declare (ignore args))
   (with-additional-indent (reporter stream "~&  ")
     (with-color (:green :stream stream)
-      (with-additional-indent (reporter stream "✓ ")
+      (with-additional-indent (reporter stream #.(concatenate 'string
+                                                              #+lispworks "o"
+                                                              #-lispworks "✓"
+                                                              " "))
         (let ((description (possible-report-description report))
               (duration (slot-value report 'duration)))
           (when description
             (with-color (:gray :stream stream)
               (format/indent reporter stream description)))
-        
+
           (when duration
             (format stream " ")
             (print-duration stream duration (slot-value report 'slow-threshold))))))))
@@ -99,7 +102,10 @@
   (declare (ignore args))
   (with-additional-indent (reporter stream "~&  ")
     (with-color (:red :stream stream)
-      (with-additional-indent (reporter stream "× ")
+      (with-additional-indent (reporter stream #.(concatenate 'string
+                                                              #+lispworks "x"
+                                                              #-lispworks "×"
+                                                              " "))
         (let ((description (possible-report-description report))
               (duration (slot-value report 'duration)))
           (when description
@@ -117,7 +123,10 @@
   ;; format/indent
   (with-additional-indent (reporter stream "~&  ")
     (with-color (:red :stream stream)
-      (with-additional-indent (reporter stream "× ")
+      (with-additional-indent (reporter stream #.(concatenate 'string
+                                                              #+lispworks "x"
+                                                              #-lispworks "×"
+                                                              " "))
         (when (slot-value report 'description)
           (format/indent reporter stream "~A~%" (slot-value report 'description)))
         (format/indent reporter stream "Raised an error ~A (expected: ~S)"
@@ -153,11 +162,17 @@
     (if (< 0 failed-count)
         (with-color (:red :stream stream)
           (format/indent reporter stream
-                         "× ~D of ~D test~:*~P failed"
+                         #.(concatenate 'string
+                                        #+lispworks "x"
+                                        #-lispworks "×"
+                                        " ~D of ~D test~:*~P failed")
                          failed-count count))
         (with-color (:green :stream stream)
           (format/indent reporter stream
-                         "✓ ~D test~:*~P completed" count)))
+                         #.(concatenate 'string
+                                        #+lispworks "o"
+                                        #-lispworks "✓"
+                                        " ~D test~:*~P completed") count)))
     (format stream " ")
     (print-duration stream
                     (reduce #'+
